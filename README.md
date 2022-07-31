@@ -4,3 +4,5 @@ memory game is where player click on tiles to reveal underneath image and match 
 
 ## Code 
 The code here is my implementation may not be a good for security or performances.
+-----
+Check it out live at [Netlify](https://match-tiles.netlify.app/)

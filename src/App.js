@@ -24,12 +24,16 @@ export default function App() {
     icon1,icon2,icon3,icon4,icon5,icon6,icon7,icon8,icon9
   ])
 
+  const [tilesLeft, setTilesLeft] = React.useState(0);
+
   const [attempts, setAttempts] = React.useState(0);
   const [score, setScore] = React.useState(0);
 
   const [tilesToMatch, storeTiles] = React.useState([]);
 
   const [imgGrid, setImgGrid] = React.useState([]);
+
+  const [reloadpage, setReloadpage] = React.useState(false);
 
 
   function matchTiles(tiles){
@@ -40,6 +44,14 @@ export default function App() {
     const img2 = ImgSrc2.src.replace(/^.*[\\/]/, '');
 
     return img1 === img2 ? true : false;
+  }
+
+  function gameOver(leftTiles){
+    if(leftTiles === 0){
+      console.log("Game Over 🥳🥳🥳");
+      console.log("🏆 Score :" + score);
+      console.log("⚛️ Attempts:" + attempts);
+    }
   }
 
   function flipCard(e){
@@ -71,14 +83,16 @@ export default function App() {
             storeTiles([]);
           }else{
             setScore(score + 100);
+            setTilesLeft(tilesLeft - 2);
             tilesToMatch.forEach(tile => {
               tile.dataset.flipped = "done";
               tile.setAttribute("disabled", true)
             });
             storeTiles([]);
+            gameOver(tilesLeft);
           }
-        }, 1000);
-
+        }, 800);
+        
       }
     }
 
@@ -96,6 +110,11 @@ export default function App() {
       arr[i] = temp; 
     }
     setImgGrid(arr);
+    setTilesLeft(arr.length);
+  }
+
+  function pageReload(){
+    window.location.reload();
   }
 
 
@@ -103,6 +122,7 @@ export default function App() {
     let tempArr = [...imgArr,...imgArr,...imgArr,...imgArr]
 
     randmiseImages(tempArr);
+
   },[])
 
   return (
@@ -124,8 +144,15 @@ export default function App() {
 
 
         <Draggable>
-            <p>Score : {score}</p>
-            <p>Attempts : {attempts}</p>
+          {
+            tilesLeft === 0 ? <h3>Hurray🎉 Game finished 🥳</h3> : ""
+          }
+            <p className='score'>Score : <span>{score}</span></p>
+            <p className='attempts'>Attempts : <span>{attempts}</span></p>
+            <button onClick={pageReload}>Restart</button>
+          {
+            tilesLeft === 0 ? <button onClick={pageReload}>Play Again</button> : ""
+          }
         </Draggable>
         
         <div className="board">

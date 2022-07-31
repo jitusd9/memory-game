@@ -97,19 +97,20 @@ body {
     grid-template-columns: repeat(6,100px);
     width: 600px;
     margin-inline:auto ;
-    padding-block: 50px;
+    padding-block: 30px;
     /* background-color: beige; */
   }
   
   .draggable{
     position: absolute;
-    width: 250px;
+    min-width: 240px;
     background-color: white;
     border-radius: 4px;
     box-shadow: 0 10px 20px rgba(0,0,0,0.1);
     user-select: none;
     touch-action: none;
     z-index: 1;
+    text-align: center;
   }
   
   .drag{
@@ -128,7 +129,31 @@ body {
   .drag p{
     pointer-events: none;
     font-weight: bold;
-    color: rgb(84, 5, 230);
+    color: #5405e6;
+  }
+
+  .draggable h3{
+    margin-block: 1rem;
+  }
+
+  .content .score,
+  .content .attempts,
+  .content button{
+    display: inline-block;
+    /* color: #5405e6; */
+    background-color: lightgoldenrodyellow;
+
+    margin: 1rem 0.5rem;
+    padding: 0.2rem 1rem;
+    border-radius: 4px;
+  }
+
+  .score span{
+    color: green;
+  }
+
+  .attempts span{
+    color: #5405e6;
   }
   
   .drag .close{
@@ -151,6 +176,23 @@ body {
   
   .closeIt{
     transform: translate(10px,-100%);
+  }
+
+  .content{
+    padding: 1rem;
+  }
+
+  .content button{
+    cursor: pointer;
+    display: block;
+    margin-inline: auto;
+    margin-block: 0;
+    font-size: 1.2rem;
+    padding: 0.5rem 1rem;
+    border: none;
+    color: white;
+    background-color: rgb(46, 46, 46);
+    box-shadow: 0 4px 8px  rgba(0, 0, 0, 0.2);
   }
   
   
@@ -240,6 +282,3 @@ body {
     filter: drop-shadow(0 6px 2px rgba(0,0,0,0.1));
   }
   
-  .content{
-    padding: 1rem;
-  }
