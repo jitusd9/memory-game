@@ -33,7 +33,9 @@ export default function App() {
 
   const [imgGrid, setImgGrid] = React.useState([]);
 
-  const [reloadpage, setReloadpage] = React.useState(false);
+  const [displayScore, setDisplayScore] = React.useState(true);
+
+
 
 
   function matchTiles(tiles){
@@ -119,9 +121,11 @@ export default function App() {
 
 
   React.useEffect(() => {
+    
     let tempArr = [...imgArr,...imgArr,...imgArr,...imgArr]
 
     randmiseImages(tempArr);
+    
 
   },[])
 
@@ -142,18 +146,23 @@ export default function App() {
           <div className="box">E</div>
         </div>
 
+        {
+          !displayScore ? <button className='show-btn' onClick={() => setDisplayScore(true)}>Show Scorecard</button> : ""
+        }
 
-        <Draggable>
+        {
+          displayScore ? <Draggable displayfunc={setDisplayScore}>
           {
             tilesLeft === 0 ? <h3>Hurray🎉 Game finished 🥳</h3> : ""
           }
             <p className='score'>Score : <span>{score}</span></p>
             <p className='attempts'>Attempts : <span>{attempts}</span></p>
             <button onClick={pageReload}>Restart</button>
-          {
-            tilesLeft === 0 ? <button onClick={pageReload}>Play Again</button> : ""
-          }
-        </Draggable>
+
+        </Draggable> : ""
+        }
+
+        
         
         <div className="board">
             {

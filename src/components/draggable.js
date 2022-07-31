@@ -5,6 +5,8 @@ export default function Draggable(props) {
     const [xPos, setXPos] = React.useState(0);
     const [yPos, setYPos] = React.useState(0);
 
+    const [cardOpen, setCardopen] = React.useState(true);
+
     const box = React.useRef(null); 
 
     function changeX(x){
@@ -13,6 +15,13 @@ export default function Draggable(props) {
 
     function changeY(y){
         setYPos(y);
+    }
+
+    function closeCard(){
+        
+        setCardopen(!cardOpen);
+        
+        console.log('clicked');
     }
 
     React.useEffect(()=> {
@@ -70,10 +79,7 @@ export default function Draggable(props) {
         }
 
 
-        const closeBtn = document.querySelector('.close');
-        closeBtn.addEventListener('click',()=>{
-            closeBtn.classList.toggle('closeIt');
-        })
+
 
         // for touch devices 
         window.addEventListener('touchstart', dragStart);
@@ -91,7 +97,7 @@ export default function Draggable(props) {
     <div className="draggable" style={{transform : `translate(${xPos}px, ${yPos}px)`}}>
         <div ref={box} className="drag">
                 <p>Scoreboard</p>
-                <div className="close"></div>
+                <button className="close" onClick={() => {props.displayfunc(false)}}></button>
             </div>
         <div className="content">
             {
