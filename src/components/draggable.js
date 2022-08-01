@@ -5,8 +5,6 @@ export default function Draggable(props) {
     const [xPos, setXPos] = React.useState(0);
     const [yPos, setYPos] = React.useState(0);
 
-    const [cardOpen, setCardopen] = React.useState(true);
-
     const box = React.useRef(null); 
 
     function changeX(x){
@@ -15,13 +13,6 @@ export default function Draggable(props) {
 
     function changeY(y){
         setYPos(y);
-    }
-
-    function closeCard(){
-        
-        setCardopen(!cardOpen);
-        
-        console.log('clicked');
     }
 
     React.useEffect(()=> {
@@ -53,8 +44,9 @@ export default function Draggable(props) {
 
             initialX = currentX;
             initialY = currentY;
-
+            
             active = false;
+
         }
 
         function drag(e){
@@ -78,9 +70,6 @@ export default function Draggable(props) {
             }
         }
 
-
-
-
         // for touch devices 
         window.addEventListener('touchstart', dragStart);
         window.addEventListener("touchend", drag);
@@ -96,9 +85,9 @@ export default function Draggable(props) {
   return (
     <div className="draggable" style={{transform : `translate(${xPos}px, ${yPos}px)`}}>
         <div ref={box} className="drag">
-                <p>Scoreboard</p>
-                <button className="close" onClick={() => {props.displayfunc(false)}}></button>
-            </div>
+            <p>Scoreboard</p>
+            <button className="close" onClick={() => {props.displayfunc(false)}}></button>
+        </div>
         <div className="content">
             {
                 props.children

@@ -20,11 +20,8 @@ import {
 
 export default function App() {
 
-  const [imgArr, setImgArr] = React.useState([
-    icon1,icon2,icon3,icon4,icon5,icon6,icon7,icon8,icon9
-  ])
-
   const [tilesLeft, setTilesLeft] = React.useState(0);
+  const [falsey, setFalsy] = React.useState(false);
 
   const [attempts, setAttempts] = React.useState(0);
   const [score, setScore] = React.useState(0);
@@ -36,54 +33,38 @@ export default function App() {
   const [displayScore, setDisplayScore] = React.useState(true);
 
 
-
-
   function matchTiles(tiles){
     let ImgSrc1 = tiles[0].querySelector('img');
     let ImgSrc2 = tiles[1].querySelector('img');
-
     const img1 = ImgSrc1.src.replace(/^.*[\\/]/, '');
     const img2 = ImgSrc2.src.replace(/^.*[\\/]/, '');
-
     return img1 === img2 ? true : false;
-  }
-
-  function gameOver(leftTiles){
-    if(leftTiles === 0){
-      console.log("Game Over 🥳🥳🥳");
-      console.log("🏆 Score :" + score);
-      console.log("⚛️ Attempts:" + attempts);
-    }
   }
 
   function flipCard(e){
 
     let tile = e.target;
-
     tile.dataset.flipped = "true";
     tile.setAttribute("disabled", true);
     
-
     if(tilesToMatch.length < 2){
-
       tilesToMatch.push(tile);
 
       if(tilesToMatch.length === 2){
-
         setAttempts(attempts + 1);
-
         let matchResult = matchTiles(tilesToMatch);
 
         setTimeout(() => {
           if(!matchResult){
+            // match failed
             score <= 0 ? setScore(0) : setScore(score - 20);
-            
             tilesToMatch.forEach(tile => {
               tile.dataset.flipped = "false";
               tile.setAttribute("disabled", false)
             });
             storeTiles([]);
           }else{
+            //match succeed
             setScore(score + 100);
             setTilesLeft(tilesLeft - 2);
             tilesToMatch.forEach(tile => {
@@ -91,87 +72,82 @@ export default function App() {
               tile.setAttribute("disabled", true)
             });
             storeTiles([]);
-            gameOver(tilesLeft);
           }
+
         }, 800);
         
       }
+
     }
 
   }
 
-  // Create Game Grid --------------------------------
-  function randmiseImages(arr){
-    
+  // CREATE GAME GRID
+  function randmiseImages(){
+    let imgArr = [icon1,icon2,icon3,icon4,icon5,icon6,icon7,icon8,icon9,icon1,icon2,icon3,icon4,icon5,icon6,icon7,icon8,icon9,icon1,icon2,icon3,icon4,icon5,icon6,icon7,icon8,icon9,icon1,icon2,icon3,icon4,icon5,icon6,icon7,icon8,icon9]
     for (let i = 0; i < 36; i++) {
       let randomIndex = Math.floor(Math.random() * 36);
-
-      let temp = arr[randomIndex];
-
-      arr[randomIndex] = arr[i];
-      arr[i] = temp; 
+      let temp = imgArr[randomIndex];
+      imgArr[randomIndex] = imgArr[i];
+      imgArr[i] = temp; 
     }
-    setImgGrid(arr);
-    setTilesLeft(arr.length);
+    setImgGrid(imgArr);
+    setTilesLeft(imgArr.length);
   }
 
   function pageReload(){
     window.location.reload();
   }
 
+  function quickCheat(){
+    score === 0 ? setScore(0) : setScore(score - 50);
+    setFalsy(true);
+    setTimeout(() => {
+      setFalsy(false);
+    }, 1000);
+  }
 
   React.useEffect(() => {
-    
-    let tempArr = [...imgArr,...imgArr,...imgArr,...imgArr]
-
-    randmiseImages(tempArr);
-    
-
+    randmiseImages();
   },[])
 
   return (
-    <div className='App'>
-    <div className='game'>
-        <div className='title'>
-          <div className="box">M</div>
-          <div className="box">E</div>
-          <div className="box">M</div>
-          <div className="box">O</div>
-          <div className="box">R</div>
-          <div className="box">Y</div>
-
-          <div className="box">G</div>
-          <div className="box">A</div>
-          <div className="box">M</div>
-          <div className="box">E</div>
+      <div className="game">
+        <div className="title">
+          {
+            "MEMORY GAME".split("").map((letter , index)=> (
+                <div className='box' key={index}>
+                  {letter}
+                </div>
+              ))
+          }
         </div>
 
         {
+          /*button hides when scoreboard displays*/
           !displayScore ? <button className='show-btn' onClick={() => setDisplayScore(true)}>Show Scorecard</button> : ""
         }
 
         {
-          displayScore ? <Draggable displayfunc={setDisplayScore}>
-          {
-            tilesLeft === 0 ? <h3>Hurray🎉 Game finished 🥳</h3> : ""
-          }
+          displayScore ? 
+          <Draggable displayfunc={setDisplayScore}>
+            {
+              tilesLeft === 0 ? <h3>Hurray🎉 Game finished 🥳</h3> : ""
+            }
             <p className='score'>Score : <span>{score}</span></p>
             <p className='attempts'>Attempts : <span>{attempts}</span></p>
-            <button onClick={pageReload}>Restart</button>
-
-        </Draggable> : ""
+            <div>
+              <button onClick={pageReload}>Restart</button>
+              <button onClick={quickCheat}>Cheat</button>
+            </div>
+          </Draggable> : ""
         }
 
-        
         
         <div className="board">
             {
               imgGrid.map((img,index) => (
-                <div className="card" onClick={(e) => {
-                  //  clickAudio.play(); 
-                   flipCard(e);
-                  }} data-flipped="false" key={index}>
-
+                <div className="card" onClick={(e) => {flipCard(e);}} data-flipped={falsey} key={index}>
                   <div className="card-inner">
                     <div className="front"></div>
                     <div className="back">
@@ -183,9 +159,13 @@ export default function App() {
             }
         </div>
 
-        <p className='attribution'>🔥 icons from <a target="_blank" rel='noreferrer' href="https://free3dicon.com">free3dicon.com</a></p>
+        <div className='attribution'>
+          <p>
+            <a target="_blank" rel='noreferrer' href="https://free3dicon.com">🔥 icons from free3dicon.com &#8599;</a>
+          </p>
+        </div>
+
       </div>
-    </div>
   )
 }
 
