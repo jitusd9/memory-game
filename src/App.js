@@ -25,12 +25,15 @@ export default function App() {
 
   const [attempts, setAttempts] = React.useState(0);
   const [score, setScore] = React.useState(0);
+  const [highScore, setHighScore] = React.useState(0);
 
   const [tilesToMatch, storeTiles] = React.useState([]);
 
   const [imgGrid, setImgGrid] = React.useState([]);
 
   const [displayScore, setDisplayScore] = React.useState(true);
+
+  const [reload, setReload] = React.useState(false);
 
 
   function matchTiles(tiles){
@@ -74,10 +77,14 @@ export default function App() {
             storeTiles([]);
           }
 
+          if(score > highScore){
+            setHighScore(score);
+            localStorage.setItem("score", score);
+          }
+
         }, 800);
         
       }
-
     }
 
   }
@@ -93,11 +100,9 @@ export default function App() {
     }
     setImgGrid(imgArr);
     setTilesLeft(imgArr.length);
+    getScore();
   }
 
-  function pageReload(){
-    window.location.reload();
-  }
 
   function quickCheat(){
     score === 0 ? setScore(0) : setScore(score - 50);
@@ -107,8 +112,19 @@ export default function App() {
     }, 1000);
   }
 
+  function getScore(){
+    let hScore = localStorage.getItem("score");
+    setHighScore(hScore);
+  }
+
+  function restartGame(){
+    window.location.reload();
+  }
+
   React.useEffect(() => {
+    
     randmiseImages();
+
   },[])
 
   return (
@@ -116,8 +132,13 @@ export default function App() {
         <div className="title">
           {
             "MEMORY GAME".split("").map((letter , index)=> (
-                <div className='box' key={index}>
-                  {letter}
+                <div className='box card' key={index}>
+                  <div className="card-inner">
+                    <div className="front"></div>
+                    <div className="back">
+                      {letter}
+                    </div>
+                  </div>
                 </div>
               ))
           }
@@ -130,14 +151,15 @@ export default function App() {
 
         {
           displayScore ? 
-          <Draggable displayfunc={setDisplayScore}>
+          <Draggable displayfunc={setDisplayScore} moveX={4} moveY={3}>
             {
               tilesLeft === 0 ? <h3>Hurray🎉 Game finished 🥳</h3> : ""
             }
+            <p>Highest Score : {highScore}</p>
             <p className='score'>Score : <span>{score}</span></p>
             <p className='attempts'>Attempts : <span>{attempts}</span></p>
             <div>
-              <button onClick={pageReload}>Restart</button>
+              <button onClick={restartGame}>Restart</button>
               <button onClick={quickCheat}>Cheat</button>
             </div>
           </Draggable> : ""

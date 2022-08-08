@@ -6,6 +6,7 @@ export default function Draggable(props) {
     const [yPos, setYPos] = React.useState(0);
 
     const box = React.useRef(null); 
+    // const container = React.useRef(null);
 
     function changeX(x){
         setXPos(x);
@@ -70,28 +71,32 @@ export default function Draggable(props) {
             }
         }
 
+        const container = document.getElementById('container');
+
         // for touch devices 
-        window.addEventListener('touchstart', dragStart);
-        window.addEventListener("touchend", drag);
-        window.addEventListener("touchmove", dragEnd);
+        container.addEventListener('touchstart', dragStart);
+        container.addEventListener("touchend", drag);
+        container.addEventListener("touchmove", dragEnd);
 
         // for mouse events 
-        window.addEventListener('mousedown', dragStart, false)
-        window.addEventListener("mousemove", drag, false)
-        window.addEventListener("mouseup", dragEnd, false)
+        container.addEventListener('mousedown', dragStart, false)
+        container.addEventListener("mousemove", drag, false)
+        container.addEventListener("mouseup", dragEnd, false)
 
       },[])
 
   return (
-    <div className="draggable" style={{transform : `translate(${xPos}px, ${yPos}px)`}}>
-        <div ref={box} className="drag">
-            <p>Scoreboard</p>
-            <button className="close" onClick={() => {props.displayfunc(false)}}></button>
-        </div>
-        <div className="content">
-            {
-                props.children
-            }
+    <div id="container">
+        <div  className="draggable" style={{transform : `translate(${xPos}px, ${yPos}px)`}}>
+            <div ref={box} className="drag">
+                <p>Scoreboard</p>
+                <button className="close" onClick={() => {props.displayfunc(false)}}></button>
+            </div>
+            <div className="content">
+                {
+                    props.children
+                }
+            </div>
         </div>
     </div>
   )
