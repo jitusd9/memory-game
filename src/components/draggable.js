@@ -6,7 +6,6 @@ export default function Draggable(props) {
     const [yPos, setYPos] = React.useState(0);
 
     const box = React.useRef(null); 
-    // const container = React.useRef(null);
 
     function changeX(x){
         setXPos(x);
@@ -71,22 +70,19 @@ export default function Draggable(props) {
             }
         }
 
-        const container = document.getElementById('container');
-
         // for touch devices 
-        container.addEventListener('touchstart', dragStart);
-        container.addEventListener("touchend", drag);
-        container.addEventListener("touchmove", dragEnd);
+        window.addEventListener('touchstart', dragStart);
+        window.addEventListener("touchmove", drag);
+        window.addEventListener("touchend", dragEnd);
 
         // for mouse events 
-        container.addEventListener('mousedown', dragStart, false)
-        container.addEventListener("mousemove", drag, false)
-        container.addEventListener("mouseup", dragEnd, false)
+        window.addEventListener('mousedown', dragStart, false)
+        window.addEventListener("mousemove", drag, false)
+        window.addEventListener("mouseup", dragEnd, false)
 
       },[])
 
   return (
-    <div id="container">
         <div  className="draggable" style={{transform : `translate(${xPos}px, ${yPos}px)`}}>
             <div ref={box} className="drag">
                 <p>Scoreboard</p>
@@ -98,6 +94,5 @@ export default function Draggable(props) {
                 }
             </div>
         </div>
-    </div>
   )
 }
