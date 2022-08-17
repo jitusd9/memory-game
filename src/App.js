@@ -75,12 +75,7 @@ export default function App() {
               tile.setAttribute("disabled", true)
             });
             storeTiles([]);
-          }
-
-          if(score > highScore){
-            setHighScore(score);
-            localStorage.setItem("score", score);
-          }
+          }         
 
         }, 800);
         
@@ -122,10 +117,17 @@ export default function App() {
   }
 
   React.useEffect(() => {
-    
     randmiseImages();
-
   },[])
+
+  React.useEffect(() => {
+
+    if(score > highScore){
+      setHighScore(score);
+      localStorage.setItem("score", score);
+    }
+
+  },[score])
 
   return (
       <div className="game">
@@ -160,7 +162,7 @@ export default function App() {
             <p className='attempts'>Attempts : <span>{attempts}</span></p>
             <div>
               <button onClick={restartGame}>Restart</button>
-              <button onClick={quickCheat}>Cheat</button>
+              {/* <button onClick={quickCheat}>Cheat</button> */}
             </div>
           </Draggable> : ""
         }
