@@ -15,7 +15,9 @@ export default function Draggable(props) {
         setYPos(y);
     }
 
+
     React.useEffect(()=> {
+
         let active = false;
         let currentX;
         let currentY;

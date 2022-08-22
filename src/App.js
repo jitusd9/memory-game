@@ -12,16 +12,12 @@ import {
     icon7,
     icon8,
     icon9,
-    icon10,
-    icon11,
-    icon12
 } from './icons'
 
 
 export default function App() {
 
   const [tilesLeft, setTilesLeft] = React.useState(0);
-  const [falsey, setFalsy] = React.useState(false);
 
   const [attempts, setAttempts] = React.useState(0);
   const [score, setScore] = React.useState(0);
@@ -31,9 +27,9 @@ export default function App() {
 
   const [imgGrid, setImgGrid] = React.useState([]);
 
-  const [displayScore, setDisplayScore] = React.useState(true);
+  const [scorecard, setScorecard] = React.useState(true);
 
-  const [reload, setReload] = React.useState(false);
+  const [clickable, setClickable] = React.useState(true);
 
 
   function matchTiles(tiles){
@@ -49,11 +45,13 @@ export default function App() {
     let tile = e.target;
     tile.dataset.flipped = "true";
     tile.setAttribute("disabled", true);
-    
+
     if(tilesToMatch.length < 2){
       tilesToMatch.push(tile);
 
       if(tilesToMatch.length === 2){
+    
+        setClickable(false);
         setAttempts(attempts + 1);
         let matchResult = matchTiles(tilesToMatch);
 
@@ -66,6 +64,7 @@ export default function App() {
               tile.setAttribute("disabled", false)
             });
             storeTiles([]);
+            setClickable(true);
           }else{
             //match succeed
             setScore(score + 100);
@@ -75,9 +74,11 @@ export default function App() {
               tile.setAttribute("disabled", true)
             });
             storeTiles([]);
+            setClickable(true);
+            
           }         
 
-        }, 800);
+        }, 600);
         
       }
     }
@@ -98,14 +99,6 @@ export default function App() {
     getScore();
   }
 
-
-  function quickCheat(){
-    score === 0 ? setScore(0) : setScore(score - 50);
-    setFalsy(true);
-    setTimeout(() => {
-      setFalsy(false);
-    }, 1000);
-  }
 
   function getScore(){
     let hScore = localStorage.getItem("score");
@@ -148,12 +141,12 @@ export default function App() {
 
         {
           /*button hides when scoreboard displays*/
-          !displayScore ? <button className='show-btn' onClick={() => setDisplayScore(true)}>Show Scorecard</button> : ""
+          !scorecard ? <button className='show-btn' onClick={() => setScorecard(true)}>Show Scorecard</button> : ""
         }
 
         {
-          displayScore ? 
-          <Draggable displayfunc={setDisplayScore} moveX={4} moveY={3}>
+          scorecard || tilesLeft === 0 ? 
+          <Draggable displayfunc={setScorecard} moveX={4} moveY={3}>
             {
               tilesLeft === 0 ? <h3>Hurray🎉 Game finished 🥳</h3> : ""
             }
@@ -162,7 +155,7 @@ export default function App() {
             <p className='attempts'>Attempts : <span>{attempts}</span></p>
             <div>
               <button onClick={restartGame}>Restart</button>
-              {/* <button onClick={quickCheat}>Cheat</button> */}
+
             </div>
           </Draggable> : ""
         }
@@ -171,7 +164,7 @@ export default function App() {
         <div className="board">
             {
               imgGrid.map((img,index) => (
-                <div className="card" onClick={(e) => {flipCard(e);}} data-flipped={falsey} key={index}>
+                <div className="card" onClick={(e) => { clickable && flipCard(e);}} data-flipped="false" key={index}>
                   <div className="card-inner">
                     <div className="front"></div>
                     <div className="back">
