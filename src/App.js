@@ -3,15 +3,12 @@ import "./App.css"
 import Draggable from './components/draggable'
 
 import { 
-    icon1,
     icon2,
     icon3,
     icon4,
     icon5,
     icon6,
-    icon7,
     icon8,
-    icon9,
 } from './icons'
 
 
@@ -85,11 +82,16 @@ export default function App() {
 
   }
 
+
+
   // CREATE GAME GRID
   function randmiseImages(){
-    let imgArr = [icon1,icon2,icon3,icon4,icon5,icon6,icon7,icon8,icon9,icon1,icon2,icon3,icon4,icon5,icon6,icon7,icon8,icon9,icon1,icon2,icon3,icon4,icon5,icon6,icon7,icon8,icon9,icon1,icon2,icon3,icon4,icon5,icon6,icon7,icon8,icon9]
-    for (let i = 0; i < 36; i++) {
-      let randomIndex = Math.floor(Math.random() * 36);
+    const images = [icon8,icon2,icon3,icon4,icon5,icon6];
+    let imgArr = [...images,...images,...images,...images]
+
+    
+    for (let i = 0; i < imgArr.length; i++) {
+      let randomIndex = Math.floor(Math.random() * imgArr.length);
       let temp = imgArr[randomIndex];
       imgArr[randomIndex] = imgArr[i];
       imgArr[i] = temp; 
@@ -111,6 +113,7 @@ export default function App() {
 
   React.useEffect(() => {
     randmiseImages();
+
   },[])
 
   React.useEffect(() => {
@@ -146,7 +149,7 @@ export default function App() {
 
         {
           scorecard || tilesLeft === 0 ? 
-          <Draggable displayfunc={setScorecard} moveX={4} moveY={3}>
+          <Draggable displayfunc={setScorecard}>
             {
               tilesLeft === 0 ? <h3>Hurray🎉 Game finished 🥳</h3> : ""
             }
